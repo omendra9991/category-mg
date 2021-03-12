@@ -5,6 +5,7 @@ const uploadController = require("../controllers/publicAPI");
 
 let routes = app => {
   router.get("/listCat", uploadController.getCategory);
+  router.get("/listCat/:id", uploadController.getCategorywithID);
   router.post("/multiple-upload", uploadController.multipleUpload);
   router.delete("/delCat/:id", uploadController.delCategory);
   router.put("/updateCat/:id", uploadController.updateCategory);

@@ -7,10 +7,7 @@ const multipleUpload = async (req, res) => {
   var data={};
   try {
     await upload(req, res);
-    if (req.files.length <= 0) {
-      return res.send(`You must select at least 1 file.`);
-    }
-    req.files.forEach(image => { 
+    req.files.forEach(image => {
       image_array.push(image.path);
     });
         data=req.body;
@@ -45,6 +42,16 @@ const getCategory = async (req, res) => {
         } 
     });
 };
+const getCategorywithID = async (req, res) => {
+  let id = req.params.id;
+    category.find({_id: id}, (err, result) => {
+        if(err) {
+            res.status(200).json({error: err});
+        } else {
+            res.status(200).json(result);  
+        } 
+    });
+};
 const delCategory = async (req, res) => {
   const id = req.params.id;
   category.deleteOne({_id: id}, (err) => {
@@ -62,35 +69,22 @@ const updateCategory = async (req, res) => {
   var data={};
   try {
     await upload(req, res);
-    if (req.files.length <= 0) {
-      return res.send(`You must select at least 1 file.`);
-    }
+    
     req.files.forEach(image => { 
       image_array.push(image.path);
     });
-        data=req.body;
-        data.catImages=image_array;
-    var myData = new category(data);
-    category.findOneAndUpdate(
-      { _id: id },
+    data=req.body;
+    if(image_array.length>0)
+      data.catImages=image_array;
+    
+    category.updateOne(
+      {_id: id },
       {
-      $set: {
-          catName: myData.catName,
-          pageTitle:myData.pageTitle,
-          categoryTitle:myData.categoryTitle,
-          metaDescription:myData.metaDescription,
-          catImages:myData.catImages,
-          shortDescription:myData.shortDescription,
-          longDescription:myData.longDescription,
-          available:myData.available,
-          seoURL:myData.seoURL,
-          startDate:myData.startDate,
-          endDate:myData.endDate
-      }
+      $set:data
       },
       {
-      upsert: true
-      }
+      new:true 
+    }
   )
       .then(result => {
           res.status(200).json(result);
@@ -106,11 +100,11 @@ const updateCategory = async (req, res) => {
   }
   
   
-  
 };
 module.exports = {
   multipleUpload: multipleUpload,
   getCategory:getCategory,
   delCategory:delCategory,
-  updateCategory:updateCategory
+  updateCategory:updateCategory,
+  getCategorywithID:getCategorywithID
 };
