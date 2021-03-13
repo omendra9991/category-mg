@@ -19,6 +19,6 @@ var storage = multer.diskStorage({
   }
 });
 
-var uploadFiles = multer({ storage: storage }).array("catImages", 10);
+var uploadFiles = multer({ storage: storage }).array("catImages", 100);
 var uploadFilesMiddleware = util.promisify(uploadFiles);
 module.exports = uploadFilesMiddleware;
