@@ -38,6 +38,7 @@ describe('category-management', () => {
     it('it should update the category', (done) => {
         chai.request(server)
         .put('/updateCat/:6039dc92bc233a37043a0836')
+        .send(category)
         .end((err, res) => {
             (res).should.have.status(200);
             done();
